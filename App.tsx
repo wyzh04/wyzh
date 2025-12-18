@@ -5,7 +5,8 @@ import {
   Wand2, History, 
   User as UserIcon, LogOut, Trash2, X, Plus, Layers, MessageSquareText, Menu,
   Smartphone, Chrome, MessageCircle, ShieldCheck, Cpu, Binary, Eye, Film, Zap,
-  Sparkles, Camera, Clapperboard, ChevronRight, Share2, Globe, Github, Info
+  Sparkles, Camera, Clapperboard, ChevronRight, Share2, Globe, Github, Info,
+  MoveHorizontal, Lightbulb, Focus
 } from 'lucide-react';
 import { analyzeMediaForPrompts } from './services/geminiService';
 import { AnalysisState, PromptResult, PromptRecord, User, TargetModel } from './types';
@@ -191,7 +192,6 @@ const App: React.FC = () => {
       ) : (
         <>
           {/* --- History Sidebar --- */}
-          {/* On desktop: static/flex child to avoid covering header. On mobile: fixed overlay. */}
           <aside className={`
             fixed lg:static inset-y-0 left-0 z-50 lg:z-10
             w-80 border-r flex flex-col shrink-0
@@ -323,7 +323,7 @@ const App: React.FC = () => {
                       </div>
                       <textarea 
                         className={`w-full p-10 rounded-[2.5rem] text-sm font-bold outline-none border-2 transition-all h-56 resize-none shadow-inner leading-relaxed ${targetModel === 'sora2' ? 'bg-white/5 border-white/5 text-white focus:border-indigo-500 focus:ring-8 focus:ring-indigo-500/10' : 'bg-slate-50 border-slate-100 text-slate-800 focus:border-indigo-200 focus:ring-8 focus:ring-indigo-100/50'}`} 
-                        placeholder={targetModel === 'nano' ? "请定义画面的像素深度、光源路径以及具体的物理材质属性标签..." : "请编写导演脚本：描述镜头的起止状态、关键动作的物理反馈以及环境的时间性演变..."}
+                        placeholder={targetModel === 'nano' ? "Nano 级架构指令：精准定义景别、镜头变焦感、复杂的视听语言（如生物荧光、体视雾效）以及电影级的人物微动作与交互关系..." : "请编写导演脚本：描述镜头的起止状态、关键动作的物理反馈以及环境的时间性演变..."}
                         value={fusionInstructions} 
                         onChange={e => setFusionInstructions(e.target.value)} 
                       />
@@ -430,9 +430,10 @@ const OutputCard: React.FC<{title: string, content: string, zh: string, type: st
   <div className={`rounded-[3.5rem] border shadow-2xl overflow-hidden group hover:-translate-y-1 transition-all duration-500 ${targetModel === 'sora2' ? 'bg-slate-950 border-white/10' : 'bg-white border-slate-200'}`}>
     <div className={`px-12 py-6 flex justify-between items-center ${targetModel === 'sora2' ? 'bg-white/5 border-b border-white/5' : 'bg-slate-50/50 border-b border-slate-100'}`}>
       <span className={`text-[10px] font-black uppercase tracking-[0.4em] ${accentColor}`}>{title}</span>
-      <div className="flex gap-3">
-        {targetModel === 'sora2' ? <Film className="w-4 h-4 text-white/10" /> : <Cpu className="w-4 h-4 text-slate-200" />}
-        <Globe className="w-4 h-4 text-slate-200 opacity-20" />
+      <div className="flex gap-4">
+        <Lightbulb className="w-4 h-4 text-indigo-400 opacity-40" />
+        <Focus className="w-4 h-4 text-indigo-400 opacity-40" />
+        <MoveHorizontal className="w-4 h-4 text-indigo-400 opacity-40" />
       </div>
     </div>
     <div className="p-12 space-y-12">
@@ -449,7 +450,7 @@ const OutputCard: React.FC<{title: string, content: string, zh: string, type: st
       </div>
       <div className={`pt-12 border-t ${targetModel === 'sora2' ? 'border-white/5' : 'border-slate-50'}`}>
         <div className="flex justify-between items-center mb-6">
-           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><Eye className="w-4 h-4" /> Semantic Logic</span>
+           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><Eye className="w-4 h-4" /> Master Analysis</span>
            <button onClick={() => onCopy(zh, `${type}-zh`)} className={`p-3 rounded-2xl transition-all hover:scale-110 active:scale-90 ${targetModel === 'sora2' ? 'bg-white/5 text-white/40 hover:text-indigo-400' : 'bg-indigo-50 text-indigo-500 hover:bg-indigo-100'}`}>
              {copiedId === `${type}-zh` ? <Check className="w-6 h-6 text-emerald-500" /> : <Copy className="w-6 h-6" />}
            </button>

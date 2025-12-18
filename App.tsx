@@ -4,7 +4,7 @@ import {
   ImageIcon, Copy, Check, RefreshCw, 
   AlertCircle, Wand2, History, 
   User as UserIcon, LogOut, Download, Trash2, X, Plus, Layers, MessageSquareText, Sparkles, Menu,
-  Smartphone, Chrome, MessageCircle, ShieldCheck, Mail, Cpu, Binary
+  Smartphone, Chrome, MessageCircle, ShieldCheck, Mail, Cpu, Binary, Eye
 } from 'lucide-react';
 import { analyzeMediaForPrompts } from './services/geminiService';
 import { AnalysisState, PromptResult, PromptRecord, User } from './types';
@@ -93,7 +93,7 @@ const App: React.FC = () => {
       console.error(err);
       setStatus({ 
         loading: false, 
-        error: '指令对齐失败。请简化您的融合要求或检查图片格式。', 
+        error: '深度分析超时或语义解析失败，请尝试减少图片数量。', 
         result: status.result
       });
     }
@@ -104,7 +104,7 @@ const App: React.FC = () => {
       setAuthStage('input');
     } else {
       setAuthStage('processing');
-      setTimeout(() => finalizeLogin(method), 1200);
+      setTimeout(() => finalizeLogin(method), 1000);
     }
   };
 
@@ -140,31 +140,31 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans selection:bg-indigo-100">
+    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans selection:bg-indigo-200">
       
       {/* Login Modal */}
       {showLoginModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setShowLoginModal(false)} />
-          <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-white/20">
             <div className="p-10">
               <div className="text-center mb-10">
-                <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-100">
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-100">
                   <ShieldCheck className="text-white w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900">创作权限认证</h3>
-                <p className="text-slate-500 text-sm mt-2 font-medium">同步您的深度语义分析记录</p>
+                <h3 className="text-2xl font-black text-slate-900">大师身份认证</h3>
+                <p className="text-slate-500 text-sm mt-2 font-medium">开启像素级提示词工程权限</p>
               </div>
 
               {authStage === 'select' && (
                 <div className="space-y-4">
-                  <button onClick={() => startLogin('wechat')} className="w-full py-4 px-6 bg-[#07C160] hover:bg-[#06ae56] text-white rounded-2xl font-black flex items-center justify-between transition-all group active:scale-95">
-                    <div className="flex items-center gap-3"><MessageCircle className="w-6 h-6" /><span>微信一键登录</span></div>
+                  <button onClick={() => startLogin('wechat')} className="w-full py-4 px-6 bg-[#07C160] hover:bg-[#06ae56] text-white rounded-2xl font-black flex items-center justify-between transition-all active:scale-95">
+                    <div className="flex items-center gap-3"><MessageCircle className="w-6 h-6" /><span>微信快捷登录</span></div>
                   </button>
-                  <button onClick={() => startLogin('google')} className="w-full py-4 px-6 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-700 rounded-2xl font-black flex items-center justify-between transition-all group active:scale-95">
+                  <button onClick={() => startLogin('google')} className="w-full py-4 px-6 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-700 rounded-2xl font-black flex items-center justify-between transition-all active:scale-95">
                     <div className="flex items-center gap-3"><Chrome className="w-6 h-6 text-blue-500" /><span>Google 账号登录</span></div>
                   </button>
-                  <button onClick={() => startLogin('phone')} className="w-full py-4 px-6 bg-slate-900 hover:bg-black text-white rounded-2xl font-black flex items-center justify-between transition-all group active:scale-95">
+                  <button onClick={() => startLogin('phone')} className="w-full py-4 px-6 bg-slate-900 hover:bg-black text-white rounded-2xl font-black flex items-center justify-between transition-all active:scale-95">
                     <div className="flex items-center gap-3"><Smartphone className="w-6 h-6" /><span>手机验证登录</span></div>
                   </button>
                 </div>
@@ -176,18 +176,18 @@ const App: React.FC = () => {
                     <input type="tel" placeholder="手机号码" className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none" value={phoneInput} onChange={(e) => setPhoneInput(e.target.value)} />
                     <div className="flex gap-2">
                       <input type="text" placeholder="验证码" className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none" value={codeInput} onChange={(e) => setCodeInput(e.target.value)} />
-                      <button className="px-6 bg-slate-100 text-slate-500 font-black rounded-2xl text-xs hover:bg-slate-200">发送</button>
+                      <button className="px-6 bg-slate-100 text-slate-500 font-black rounded-2xl text-xs hover:bg-slate-200 transition-colors">发送</button>
                     </div>
                   </div>
-                  <button onClick={() => { setAuthStage('processing'); setTimeout(() => finalizeLogin('phone'), 1500); }} className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition-all">确认进入</button>
-                  <button onClick={() => setAuthStage('select')} className="w-full text-slate-400 font-bold text-xs uppercase tracking-widest">返回</button>
+                  <button onClick={() => { setAuthStage('processing'); setTimeout(() => finalizeLogin('phone'), 1200); }} className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition-all">进入工坊</button>
+                  <button onClick={() => setAuthStage('select')} className="w-full text-slate-400 font-bold text-xs uppercase tracking-widest mt-4">返回</button>
                 </div>
               )}
 
               {authStage === 'processing' && (
                 <div className="py-12 flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in duration-300">
                   <RefreshCw className="w-12 h-12 text-indigo-500 animate-spin" />
-                  <p className="font-black text-slate-900">同步创作云端数据...</p>
+                  <p className="font-black text-slate-900">正在链接创作云...</p>
                 </div>
               )}
             </div>
@@ -198,14 +198,14 @@ const App: React.FC = () => {
       {/* --- Left Sidebar --- */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-72 md:w-80 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out flex flex-col shadow-xl lg:shadow-none lg:relative lg:translate-x-0 ${showHistory ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
-          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Binary className="w-5 h-5 text-indigo-500" />语义存档</h2>
+          <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Binary className="w-5 h-5 text-indigo-600" />深度解析存档</h2>
           <button onClick={() => setShowHistory(false)} className="p-1.5 hover:bg-slate-100 rounded-lg lg:hidden"><X className="w-5 h-5" /></button>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
           {history.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-slate-400 text-center px-4 space-y-4 opacity-50">
-              <Cpu className="w-12 h-12" />
-              <p className="text-sm font-medium">空空如也</p>
+            <div className="h-full flex flex-col items-center justify-center text-slate-300 text-center px-4 space-y-4 opacity-60">
+              <Eye className="w-12 h-12" />
+              <p className="text-sm font-medium">尚无深度重构记录</p>
             </div>
           ) : (
             history.map(item => (
@@ -218,7 +218,7 @@ const App: React.FC = () => {
                   <button onClick={(e) => deleteHistoryItem(item.id, e)} className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-red-500 transition-colors"><Trash2 className="w-3 h-3" /></button>
                 </div>
                 <h4 className="font-bold text-slate-700 text-xs line-clamp-1 leading-tight">{item.descriptionZh}</h4>
-                <p className="text-[10px] text-slate-400 mt-2 line-clamp-1 italic font-mono opacity-60">Architect v2.0</p>
+                <p className="text-[10px] text-slate-400 mt-2 line-clamp-1 italic font-mono opacity-60">Accuracy Boosted</p>
               </div>
             ))
           )}
@@ -234,37 +234,37 @@ const App: React.FC = () => {
             {!showHistory && (
               <button onClick={() => setShowHistory(true)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-600 flex items-center gap-2 transition-colors">
                 <Menu className="w-5 h-5" />
-                <span className="hidden md:inline text-sm font-bold">查看记录</span>
+                <span className="hidden md:inline text-sm font-bold">展开存档</span>
               </button>
             )}
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-none">PromptMaster Nano</h1>
-                <span className="px-2 py-0.5 bg-indigo-600 text-white text-[10px] font-black rounded-lg uppercase shadow-lg shadow-indigo-100">Deep Engine</span>
+                <span className="px-2 py-0.5 bg-indigo-600 text-white text-[9px] font-black rounded uppercase tracking-tighter">Ultra v2.1</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-widest">Visual Semantic Architect</p>
+              <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-widest">Pixel-Level Prompt Architect</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {user.isLoggedIn ? (
-              <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-2xl border border-slate-200 group relative">
-                <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-md">
+              <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-2xl border border-slate-200 group relative shadow-sm">
+                <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-md">
                   {user.loginType === 'wechat' ? <MessageCircle className="w-4 h-4" /> : user.loginType === 'google' ? <Chrome className="w-4 h-4" /> : <Smartphone className="w-4 h-4" />}
                 </div>
                 <div className="flex flex-col pr-2">
                   <span className="text-slate-700 font-black text-[10px] leading-none">{user.name}</span>
-                  <span className="text-indigo-500 font-black text-[8px] uppercase tracking-widest mt-0.5">Architect</span>
+                  <span className="text-indigo-500 font-black text-[8px] uppercase tracking-widest mt-0.5">Master Architect</span>
                 </div>
-                <button onClick={handleLogout} className="p-1 text-slate-400 hover:text-red-500 transition-colors border-l border-slate-200 pl-2"><LogOut className="w-4 h-4" /></button>
+                <button onClick={handleLogout} className="p-1 text-slate-400 hover:text-red-500 transition-colors border-l border-slate-200 pl-2 ml-2"><LogOut className="w-4 h-4" /></button>
               </div>
             ) : (
               <button 
                 onClick={() => setShowLoginModal(true)}
-                className="px-6 py-2.5 bg-slate-900 text-white font-black rounded-xl text-xs hover:bg-black transition-all shadow-xl shadow-slate-100 flex items-center gap-2"
+                className="px-6 py-2.5 bg-slate-900 text-white font-black rounded-xl text-xs hover:bg-black transition-all shadow-xl shadow-slate-200 flex items-center gap-2"
               >
                 <UserIcon className="w-4 h-4" />
-                <span>立即认证</span>
+                <span>立即认证身份</span>
               </button>
             )}
           </div>
@@ -272,84 +272,117 @@ const App: React.FC = () => {
 
         <div className="flex-1 overflow-y-auto p-4 md:p-10 custom-scrollbar">
           {!user.isLoggedIn ? (
-            <div className="max-w-2xl mx-auto bg-white rounded-[3rem] p-16 text-center shadow-sm border border-slate-200 mt-10">
-              <div className="bg-indigo-50 p-8 rounded-full w-fit mx-auto mb-8"><Binary className="w-16 h-16 text-indigo-600" /></div>
-              <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">视觉语义融合工坊</h2>
-              <p className="text-slate-500 mb-10 font-medium max-w-sm mx-auto text-lg leading-relaxed">基于深度神经网络解构参考素材，严格对齐融合指令，生成大师级 Nano 提示词。</p>
-              <button onClick={() => setShowLoginModal(true)} className="px-12 py-5 bg-indigo-600 text-white font-black rounded-[2rem] hover:bg-indigo-700 transition-all shadow-2xl shadow-indigo-100 text-lg">开启架构权限</button>
+            <div className="max-w-3xl mx-auto bg-white rounded-[3.5rem] p-16 text-center shadow-sm border border-slate-200 mt-10">
+              <div className="bg-indigo-50 p-8 rounded-full w-fit mx-auto mb-8"><Binary className="w-16 h-16 text-indigo-600 animate-pulse" /></div>
+              <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">像素级 提示词架构系统</h2>
+              <p className="text-slate-500 mb-10 font-medium max-w-lg mx-auto text-lg leading-relaxed">通过多层级视觉属性堆叠与权重增强算法，为 Nano 模型提供极度精准的画面引导指令。</p>
+              <button onClick={() => setShowLoginModal(true)} className="px-14 py-5 bg-indigo-600 text-white font-black rounded-[2rem] hover:bg-indigo-700 transition-all shadow-2xl shadow-indigo-100 text-xl active:scale-95">开始重构</button>
             </div>
           ) : (
-            <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-              <section className="space-y-6">
-                <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 p-8">
+            <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-start pb-20">
+              <section className="space-y-8">
+                <div className="bg-white rounded-[3rem] shadow-sm border border-slate-200 p-8 md:p-10">
                   <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-xl font-black flex items-center gap-2 text-slate-800"><ImageIcon className="w-6 h-6 text-indigo-500" />语义参考源</h2>
+                    <h2 className="text-2xl font-black flex items-center gap-3 text-slate-800"><ImageIcon className="w-7 h-7 text-indigo-500" />语义特征库</h2>
                     <div className="flex gap-2">
-                       {mediaList.length > 1 && <div className="px-3 py-1 bg-indigo-600 text-white text-[10px] font-black rounded-full animate-pulse uppercase tracking-widest shadow-lg shadow-indigo-50">Cross-Fusion</div>}
-                       {fusionInstructions && <div className="px-3 py-1 bg-amber-500 text-white text-[10px] font-black rounded-full uppercase tracking-widest">Instruction Align</div>}
+                       {mediaList.length > 1 && <div className="px-3 py-1 bg-indigo-600 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-indigo-100">Hyper-Fusion</div>}
+                       {fusionInstructions && <div className="px-3 py-1 bg-amber-500 text-white text-[10px] font-black rounded-full uppercase tracking-widest">Direct Align</div>}
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mb-8">
+                  
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-5 mb-10">
                     {mediaList.map(item => (
-                      <div key={item.id} className="relative aspect-square group">
-                        <img src={item.url} className="w-full h-full object-cover rounded-2xl border border-slate-100 shadow-sm transition-transform group-hover:scale-105" />
-                        <button onClick={() => removeMedia(item.id)} className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full shadow-xl opacity-0 group-hover:opacity-100 border border-slate-100 hover:scale-110 transition-all"><X className="w-3 h-3" /></button>
+                      <div key={item.id} className="relative aspect-square group overflow-visible">
+                        <img src={item.url} className="w-full h-full object-cover rounded-[1.5rem] border-2 border-slate-100 shadow-sm transition-all group-hover:scale-110 group-hover:shadow-xl group-hover:z-10" />
+                        <button onClick={() => removeMedia(item.id)} className="absolute -top-2 -right-2 bg-white text-red-500 p-2 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 border border-slate-100 hover:scale-125 transition-all z-20"><X className="w-3 h-3" /></button>
                       </div>
                     ))}
-                    <label className="aspect-square border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50 text-slate-400 transition-all">
-                      <Plus className="w-8 h-8 mb-1" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">Import</span>
+                    <label className="aspect-square border-2 border-dashed border-slate-200 rounded-[1.5rem] flex flex-col items-center justify-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50 text-slate-400 transition-all group">
+                      <Plus className="w-10 h-10 mb-1 group-hover:rotate-90 transition-transform duration-300" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">导入参考</span>
                       <input type="file" className="hidden" accept="image/*,video/*" multiple onChange={handleFileUpload} />
                     </label>
                   </div>
-                  <div className="mb-8">
-                    <div className="flex justify-between items-center mb-3">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><MessageSquareText className="w-4 h-4 text-indigo-400" />导演指令 / Fusion Director</label>
+
+                  <div className="mb-10">
+                    <div className="flex justify-between items-center mb-4">
+                      <label className="text-xs font-black text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2"><MessageSquareText className="w-5 h-5 text-indigo-400" />精准导演指令 / Architecture Blueprint</label>
+                      <span className="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded">Accuracy Mode: Ultra</span>
                     </div>
                     <textarea 
-                      className="w-full p-6 bg-slate-50 border border-slate-200 rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-indigo-50 outline-none resize-none h-40 transition-all focus:bg-white shadow-inner leading-relaxed" 
-                      placeholder="告诉 AI 如何融合素材... 例如：'提取图1的人物轮廓，应用图2的梵高风格材质，但整体光影要改成午夜霓虹感'" 
+                      className="w-full p-8 bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] text-sm font-bold focus:ring-4 focus:ring-indigo-100 focus:border-indigo-200 outline-none resize-none h-48 transition-all focus:bg-white shadow-inner leading-relaxed placeholder:opacity-50" 
+                      placeholder="请尽可能详细地描述。例如：'保留图1的人脸比例，应用图2的湿润油画笔触，将背景中的光源改为来自下方的深蓝色地底发光物质...'" 
                       value={fusionInstructions} 
                       onChange={e => setFusionInstructions(e.target.value)} 
                     />
                   </div>
+
                   {mediaList.length > 0 && !status.loading && (
-                    <button onClick={handleAnalyze} className={`w-full py-5 font-black rounded-[2rem] shadow-2xl transition-all flex items-center justify-center gap-3 active:scale-95 ${status.result ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
-                      {status.result ? <><RefreshCw className="w-5 h-5" />优化重绘</> : <><Wand2 className="w-5 h-5" />深度对齐生成</>}
+                    <button onClick={handleAnalyze} className={`group w-full py-6 font-black rounded-[2.5rem] shadow-2xl transition-all flex items-center justify-center gap-4 active:scale-95 overflow-hidden relative ${status.result ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-100' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-100'}`}>
+                      <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                      {status.result ? <><RefreshCw className="w-6 h-6 z-10" /><span className="z-10 text-lg">全方位像素重构</span></> : <><Wand2 className="w-6 h-6 z-10" /><span className="z-10 text-lg">开始深度架构生成</span></>}
                     </button>
                   )}
                   {status.loading && (
-                    <div className="w-full py-5 bg-slate-100 text-indigo-600 font-black rounded-[2rem] flex flex-col items-center justify-center gap-2 animate-pulse">
+                    <div className="w-full py-6 bg-slate-100 text-indigo-600 font-black rounded-[2.5rem] flex flex-col items-center justify-center gap-3 animate-pulse border-2 border-indigo-50">
                       <div className="flex items-center gap-3">
-                        <Cpu className="w-5 h-5 animate-spin" />
-                        <span>正在进行视觉语义解构...</span>
+                        <RefreshCw className="w-6 h-6 animate-spin" />
+                        <span className="text-lg">正在执行层级属性堆叠...</span>
                       </div>
-                      <span className="text-[10px] text-indigo-400 opacity-70">Strict Instruction Alignment in Progress</span>
+                      <span className="text-[10px] text-indigo-400 font-black uppercase tracking-[0.3em] opacity-80">Injecting Multi-Layer Physics & Weights</span>
                     </div>
                   )}
                 </div>
               </section>
 
-              <section className="space-y-6 lg:sticky lg:top-10">
+              <section className="space-y-8 lg:sticky lg:top-10">
                 {!status.result && !status.loading ? (
-                  <div className="h-[500px] bg-white rounded-[2.5rem] border-2 border-slate-100 border-dashed p-10 flex flex-col items-center justify-center text-center opacity-40">
-                    <Binary className="w-16 h-16 text-slate-200 mb-6" />
-                    <h3 className="text-xl font-black text-slate-800">创作终端已就绪</h3>
-                    <p className="text-slate-400 mt-3 text-sm font-medium">素材上传后将开启语义映射</p>
+                  <div className="h-[600px] bg-white rounded-[3rem] border-2 border-slate-100 border-dashed p-10 flex flex-col items-center justify-center text-center opacity-40">
+                    <div className="relative mb-8">
+                      <Cpu className="w-20 h-20 text-slate-200" />
+                      <Eye className="absolute -bottom-2 -right-2 w-10 h-10 text-slate-100 bg-white rounded-full p-2" />
+                    </div>
+                    <h3 className="text-2xl font-black text-slate-800">实验室待机中</h3>
+                    <p className="text-slate-400 mt-4 text-sm font-medium leading-relaxed max-w-xs">上传素材以开启像素级解构，我们将为您生成支持权重语法的高精度提示词。</p>
                   </div>
                 ) : status.result ? (
-                  <div className="space-y-6 animate-in slide-in-from-right-10 duration-500">
-                    <div className="bg-indigo-600 p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden text-white">
-                      <div className="absolute -top-10 -right-10 opacity-10"><Binary className="w-40 h-40" /></div>
-                      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-200 mb-4">Architect Logic Chain / 架构逻辑链</h3>
-                      <p className="font-bold text-lg mb-2 leading-snug">{status.result.descriptionZh}</p>
-                      <p className="text-indigo-100 text-xs italic opacity-80 leading-relaxed">{status.result.description}</p>
+                  <div className="space-y-8 animate-in slide-in-from-bottom-10 duration-700 ease-out">
+                    <div className="bg-gradient-to-br from-indigo-700 to-indigo-900 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden text-white border border-indigo-400/20">
+                      <div className="absolute -bottom-10 -right-10 opacity-20 rotate-12"><Cpu className="w-56 h-56" /></div>
+                      <div className="absolute top-6 right-8 flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Architect v2.1 Verified</span>
+                      </div>
+                      <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-300 mb-6">Visual Reconstruction Report / 重构逻辑</h3>
+                      <p className="font-bold text-xl mb-4 leading-tight border-l-4 border-indigo-400 pl-4">{status.result.descriptionZh}</p>
+                      <p className="text-indigo-100 text-xs italic opacity-70 leading-relaxed font-mono">{status.result.description}</p>
                     </div>
 
-                    <PromptCard title="Positive Fusion (Nano Specialized)" english={status.result.positivePrompt} chinese={status.result.positivePromptZh} type="pos" copiedId={copiedId} onCopy={copyToClipboard} />
-                    <PromptCard title="Negative Protection (Denoise)" english={status.result.negativePrompt} chinese={status.result.negativePromptZh} type="neg" copiedId={copiedId} onCopy={copyToClipboard} accentColor="text-red-500" />
+                    <PromptCard 
+                      title="Positive Stack (Weight-Enhanced)" 
+                      english={status.result.positivePrompt} 
+                      chinese={status.result.positivePromptZh} 
+                      type="pos" 
+                      copiedId={copiedId} 
+                      onCopy={copyToClipboard} 
+                    />
                     
-                    <button onClick={() => { setMediaList([]); setFusionInstructions(''); setStatus({ loading: false, error: null, result: null }); }} className="w-full py-4 bg-white border-2 border-slate-100 hover:border-slate-300 text-slate-400 font-black rounded-2xl uppercase tracking-widest text-[10px] transition-all">Reset Workbench</button>
+                    <PromptCard 
+                      title="Negative Isolation (Hyper-Denoise)" 
+                      english={status.result.negativePrompt} 
+                      chinese={status.result.negativePromptZh} 
+                      type="neg" 
+                      copiedId={copiedId} 
+                      onCopy={copyToClipboard} 
+                      accentColor="text-red-500" 
+                    />
+                    
+                    <button 
+                      onClick={() => { setMediaList([]); setFusionInstructions(''); setStatus({ loading: false, error: null, result: null }); }} 
+                      className="w-full py-5 bg-white border-2 border-slate-100 hover:border-red-100 hover:text-red-500 text-slate-400 font-black rounded-3xl uppercase tracking-widest text-xs transition-all shadow-sm"
+                    >
+                      Clear Workshop & Restart
+                    </button>
                   </div>
                 ) : null}
               </section>
@@ -362,29 +395,39 @@ const App: React.FC = () => {
 };
 
 const PromptCard: React.FC<{title: string, english: string, chinese: string, type: string, copiedId: string | null, onCopy: (t: string, i: string) => void, accentColor?: string}> = ({ title, english, chinese, type, copiedId, onCopy, accentColor = "text-emerald-600" }) => (
-  <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden group hover:shadow-xl transition-all">
-    <div className="px-8 py-4 border-b border-slate-50 bg-slate-50/30 flex justify-between items-center">
-      <h3 className={`text-[10px] font-black tracking-widest uppercase ${accentColor}`}>{title}</h3>
-      <Sparkles className="w-3 h-3 text-indigo-400 opacity-40 group-hover:opacity-100 transition-opacity" />
-    </div>
-    <div className="p-8 space-y-6">
-      <div>
-        <div className="flex justify-between items-start mb-2">
-          <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">Architecture Tags</span>
-          <button onClick={() => onCopy(english, `${type}-en`)} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-all hover:scale-110 active:scale-95">
-            {copiedId === `${type}-en` ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-          </button>
-        </div>
-        <div className="bg-slate-900 text-indigo-100 p-6 rounded-2xl text-xs font-mono break-words shadow-2xl border border-slate-800 leading-relaxed tracking-wide">{english}</div>
+  <div className="bg-white rounded-[3rem] shadow-sm border border-slate-200 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+    <div className="px-10 py-5 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center">
+      <h3 className={`text-[10px] font-black tracking-[0.2em] uppercase ${accentColor}`}>{title}</h3>
+      <div className="flex gap-1">
+        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+        <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-indigo-400 transition-colors" />
       </div>
-      <div className="pt-6 border-t border-slate-100">
-        <div className="flex justify-between items-start mb-2">
-          <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">Semantic Interpretation</span>
-          <button onClick={() => onCopy(chinese, `${type}-zh`)} className="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 transition-all hover:scale-110 active:scale-95">
-            {copiedId === `${type}-zh` ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+    </div>
+    <div className="p-10 space-y-8">
+      <div>
+        <div className="flex justify-between items-start mb-4">
+          <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-2">
+            <Cpu className="w-3 h-3" /> Architecture Syntax
+          </span>
+          <button onClick={() => onCopy(english, `${type}-en`)} className="p-2.5 hover:bg-indigo-50 rounded-2xl text-slate-400 hover:text-indigo-600 transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-indigo-100">
+            {copiedId === `${type}-en` ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
           </button>
         </div>
-        <p className="text-slate-700 text-sm font-bold leading-relaxed">{chinese}</p>
+        <div className="bg-slate-900 text-indigo-100 p-8 rounded-[2rem] text-xs font-mono break-words shadow-2xl border border-slate-800 leading-[1.8] tracking-wider relative group/code overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full -mr-10 -mt-10 group-hover/code:scale-150 transition-transform duration-700" />
+          {english}
+        </div>
+      </div>
+      <div className="pt-8 border-t border-slate-100">
+        <div className="flex justify-between items-start mb-4">
+          <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-2">
+            <Sparkles className="w-3 h-3" /> Semantic Analysis
+          </span>
+          <button onClick={() => onCopy(chinese, `${type}-zh`)} className="p-2.5 hover:bg-indigo-50 rounded-2xl text-slate-400 hover:text-indigo-600 transition-all hover:scale-110 active:scale-90 border border-transparent hover:border-indigo-100">
+            {copiedId === `${type}-zh` ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
+          </button>
+        </div>
+        <p className="text-slate-700 text-sm font-bold leading-[1.8] pl-2 border-l-2 border-indigo-100">{chinese}</p>
       </div>
     </div>
   </div>

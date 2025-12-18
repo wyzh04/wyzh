@@ -1,6 +1,18 @@
 {
-  "name": "Copy of PromptMaster Nano",
-  "description": "An AI-powered utility to analyze images and generate high-quality positive and negative prompts optimized for generative models.",
+  "name": "PromptMaster Ultra - Professional Visual Architect",
+  "short_name": "PromptMaster",
+  "description": "The ultimate AI prompt engineering suite for Nano image models and Sora 2 video generation. Translate visual concepts into precision-engineered instructions.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/8636/8636605.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#4f46e5",
+  "background_color": "#f8fafc",
   "requestFramePermissions": [
     "camera"
   ]

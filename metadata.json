@@ -1,0 +1,7 @@
+{
+  "name": "Copy of PromptMaster Nano",
+  "description": "An AI-powered utility to analyze images and generate high-quality positive and negative prompts optimized for generative models.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

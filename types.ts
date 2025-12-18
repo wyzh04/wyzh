@@ -15,8 +15,14 @@ export interface PromptRecord extends PromptResult {
 }
 
 export interface User {
+  id: string;
   name: string;
+  avatar?: string;
+  email?: string;
+  phone?: string;
+  loginType: 'google' | 'wechat' | 'phone' | 'guest' | null;
   isLoggedIn: boolean;
+  registeredAt: number;
 }
 
 export interface AnalysisState {

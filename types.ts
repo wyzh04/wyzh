@@ -1,4 +1,6 @@
 
+export type TargetModel = 'nano' | 'sora2';
+
 export interface PromptResult {
   positivePrompt: string;
   positivePromptZh: string;
@@ -12,6 +14,7 @@ export interface PromptRecord extends PromptResult {
   id: string;
   timestamp: number;
   mediaType: string;
+  targetModel: TargetModel;
 }
 
 export interface User {

@@ -323,7 +323,7 @@ const App: React.FC = () => {
                       </div>
                       <textarea 
                         className={`w-full p-10 rounded-[2.5rem] text-sm font-bold outline-none border-2 transition-all h-56 resize-none shadow-inner leading-relaxed ${targetModel === 'sora2' ? 'bg-white/5 border-white/5 text-white focus:border-indigo-500 focus:ring-8 focus:ring-indigo-500/10' : 'bg-slate-50 border-slate-100 text-slate-800 focus:border-indigo-200 focus:ring-8 focus:ring-indigo-100/50'}`} 
-                        placeholder={targetModel === 'nano' ? "Nano 级架构指令：精准定义景别、镜头变焦感、复杂的视听语言（如生物荧光、体视雾效）以及电影级的人物微动作与交互关系..." : "请编写导演脚本：描述镜头的起止状态、关键动作的物理反馈以及环境的时间性演变..."}
+                        placeholder={targetModel === 'nano' ? "Nano 级架构指令：精准定义景别、镜头变焦感、复杂的视听语言（如生物荧光、体视雾效）以及电影级的人物微动作与交互关系..." : "Sora 2 视频脚本：描述镜头轨迹（如跟拍、推拉）、物理交互（如雨滴流淌、衣物飘动）以及画面前后的时间演变..."}
                         value={fusionInstructions} 
                         onChange={e => setFusionInstructions(e.target.value)} 
                       />

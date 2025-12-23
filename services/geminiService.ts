@@ -11,7 +11,7 @@ export async function analyzeMediaForPrompts(
 ): Promise<PromptResult> {
   const model = "gemini-3-pro-preview";
   
-  // Nano 模型：升级为“大师级视觉蓝图”模式，强化景别、视听语言与动作交互
+  // Nano 模型：大师级视觉蓝图架构
   const nanoLogic = `
     【目标：Nano 级极致视觉蓝图架构】
     你现在的身份是“首席电影视觉指导”。你生成的提示词必须是像素级精确的。
@@ -35,15 +35,34 @@ export async function analyzeMediaForPrompts(
     5. **语法风格**: 混合使用 (keyword:weight) 权重语法与长句描述。
   `;
 
-  // Sora 2 模型：保持叙事化视频描述
+  // Sora 2 模型：时空推演与物理叙事架构
   const sora2Logic = `
-    【目标：Sora 2 高阶视频/电影感生成】
-    1. **叙事逻辑**: 采用长篇幅、自然语言描述。必须包含[场景初始状态] -> [发生的动态行为] -> [环境反应]。
-    2. **镜头轨迹 (Camera Choreography)**: 
-       - 必须包含具体的运动指令：Tracking shot, Pan-tilt, Drone perspective, Cinematic orbit.
-    3. **物理与动态 (Physics & Motion)**:
-       - 描述动作的质感与物理连贯性。
-    4. **时间维度**: 描述动作的速度演变。
+    【目标：Sora 2 视频生成核心架构】
+    你现在的身份是“Sora 物理引擎构建师”与“电影导演”。
+    你不仅要描述静态画面，更要通过静态图像【反推】出一段连贯的视频脚本。
+    
+    1. **视频意图识别 (Video Intent Recognition)**:
+       - **关键**: 识别画面中的“势能”。例如，车在行驶吗？速度多快？雨是直下还是斜飘（暗示风速）？
+       - 即使是静态参考图，也要描述出【正在发生】的动作，而不是静止的状态。
+    
+    2. **时空连续性 (Temporal Continuity)**:
+       - 描述时间轴：(Beginning: The car approaches from the dark) -> (Action: It speeds past the camera with a doppler effect) -> (End: Taillights fade into the mist).
+       - 确保动作的连贯性，像写小说一样描述一段 5-10 秒的剧情。
+    
+    3. **电影级运镜 (Cinematography & Camera Movement)**:
+       - **必须**包含具体的运镜指令：
+         - (Tracking shot matching the vehicle's speed)
+         - (Slow cinematic push-in through the glass)
+         - (Low angle dolly shot emphasizing speed)
+         - (Handheld camera shake for realism)
+    
+    4. **物理交互与环境反馈 (Physics & Environmental Feedback)**:
+       - 描述环境如何“活着”：(Fog swirling around the chassis), (Raindrops streaking horizontally on the windshield), (Neon lights reflecting dynamically on the wet hood).
+       - 描述人物的微动态：(Subtle vibrations of the steering wheel), (Hair gently swaying from AC vent airflow).
+    
+    5. **Sora 提示词结构**: 
+       - 输出一段完整的、极具沉浸感的英文长段落（Caption-style）。
+       - 结构：[镜头运动方式] + [核心动态主体] + [环境物理反馈] + [光影流转] + [美学风格]。
   `;
   
   const systemInstruction = `
@@ -61,11 +80,10 @@ export async function analyzeMediaForPrompts(
     ${systemInstruction}
     
     【执行分析任务】：
-    1. 识别参考图的景别（大全景/中景/特写/微距）。
-    2. 捕捉参考图的光学属性（光质、光位、色温）。
-    3. 详细解构人物的动作、朝向、细微表情。
-    4. 描述环境的交互关系（反射、遮挡、大气干扰）。
-    5. 根据目标模型 ${targetModel.toUpperCase()} 的逻辑输出结果。
+    1. **视频动态推演**: 这是一个静态帧，请想象它的前一秒和后一秒发生了什么？(如：车辆正在加速、树叶正在后退)。
+    2. **物理细节模拟**: 空气中的颗粒、光线的折射、材质的震动感。
+    3. **镜头语言设计**: 摄影机在哪里？它是固定的还是移动的？
+    4. **Sora 专属优化**: 输出符合 Sora 物理引擎逻辑的长文本描述。
     
     请输出 JSON 格式。
   `;
@@ -87,11 +105,11 @@ export async function analyzeMediaForPrompts(
         properties: {
           positivePrompt: { 
             type: Type.STRING, 
-            description: "最终生成的英文正向提示词蓝图" 
+            description: targetModel === 'nano' ? "最终生成的英文正向提示词蓝图" : "Sora 2 专用的沉浸式视频脚本（英文长文本）" 
           },
           positivePromptZh: { 
             type: Type.STRING, 
-            description: "中文视觉逻辑解析（包含对景别、镜头语言和动作的专业说明）" 
+            description: "中文视觉逻辑解析（包含镜头轨迹、物理动态和时间演变的专业说明）" 
           },
           negativePrompt: { 
             type: Type.STRING, 
@@ -107,7 +125,7 @@ export async function analyzeMediaForPrompts(
           },
           descriptionZh: { 
             type: Type.STRING, 
-            description: "大师级架构报告（中文，总结视觉设计的艺术性）" 
+            description: "大师级架构报告（中文，总结动态意图与叙事张力）" 
           },
         },
         required: ["positivePrompt", "positivePromptZh", "negativePrompt", "negativePromptZh", "description", "descriptionZh"],
